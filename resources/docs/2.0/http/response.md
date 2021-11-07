@@ -14,11 +14,11 @@ RequestContext.get().context().response;
 
 ## Sending responses
 
-**All the below response examples assume you calling them inside a controller method**
+**All the below response examples assume you are calling them inside a controller method.**
 
 ### JSON Responses
 
-If you send a javascript object as a response, this will be interpreted as a JSON response
+If you send a javascript object as a response, this will be interpreted as a JSON response.
 
 Example:
 
@@ -35,6 +35,7 @@ return response().json({
     id    : user._id,
     email : user.email
 })
+
 // We can also specify an optional response code, by default its 200
 return response().json({...}, 500)
 ```
@@ -69,9 +70,11 @@ return response().setResponse(
 
 ### Sending JSON or a View depending on request type
 
-In some scenarios you may wish for an endpoint to output json and a view
-If our requests "Accept" header is "application/json" a JSON response will be sent
-If it's not, a view(html) response will be sent
+In some scenarios, you may wish for an endpoint to return a different format based upon what the client is asking for.
+
+If our requests "Accept" header is "application/json", a JSON response will be sent.
+
+If it's not, a view(html) response will be sent.
 
 ```typescript
 return response().negotiated(
@@ -82,9 +85,9 @@ return response().negotiated(
 
 ### Sending views
 
-Envuso uses [edge](https://github.com/edge-js/edge) templates for rendering views
+Envuso uses [edge](https://github.com/edge-js/edge) templates for rendering views.
 
-You can read more information on views [here](/2.0/http/views)
+You can read more information on views [here](/2.0/http/views).
 
 ```typescript
 return response().view('template path', {message : 'Hello world'})
@@ -92,18 +95,16 @@ return response().view('template path', {message : 'Hello world'})
 
 ### Sending redirects
 
-There's two ways of doing this in envuso, let's first cover the simplest way which utilises Fastify's redirect method
+There's two ways of doing this in envuso, let's first cover the simplest way which utilises Fastify's redirect method.
 
-This will instantly send a redirect response and end the request
+This will instantly send a redirect response and end the request.
 ```typescript
 return response().redirectNow('https://google.com')
 ```
 
-Since we also want to handle redirects within our application, we also have a wrapper around redirects
+Since we also want to handle redirects within our application, we also have a wrapper around redirects.
 
-If we were to do ```response().redirect('/home')``` or ```response().redirectResponse()```
-
-We would receive an instance of `RedirectResponseContract` which has some other handy little features
+If we were to do ```response().redirect('/home')``` or ```response().redirectResponse()```, we would receive an instance of `RedirectResponseContract` which has some other handy little features;
 
 ```typescript
 const redirect = response().redirectResponse();
@@ -136,7 +137,7 @@ return back()
 
 ```
 
-There is also a "redirect()" helper, which allows us to create a redirect response, but without directly going through `request().redirectResponse()` or `request().redirect()` 
+There is also a "redirect()" helper, which allows us to create a redirect response, but without directly going through `request().redirectResponse()` or `request().redirect()`.
 ```typescript
 return redirect() // returns a RedirectResponseContract
 
@@ -148,9 +149,9 @@ return redirect('https://google.com')
 ```
 
 ### Redirecting to a route
-We can also redirect to Envuso Routes, all envuso routes have a generated name which takes the format of "{controller name}.{controller method name}"
+We can also redirect to Envuso Routes. All envuso routes have a generated name which takes the format of ```{controller name}.{controller method name}```.
 
-If we use the ```envuso build``` command, this will generate some useful meta for us which will give us auto completion on these route names with redirects
+If we use the ```envuso build``` command, this will generate some useful meta for us which will give us auto completion on these route names with redirects.
 
 If we have a controller "UserController" with a method named "getUser", we can redirect to that like:
 
@@ -160,11 +161,12 @@ return response().route('UserController.getUser')
 return redirect().route('UserController.getUser')
 ```
 
-If your route also takes route parameters and such, we can also pass them into the route() method with the second parameter
+If your route also takes route parameters and such, we can also pass them into the route() method with the second parameter.
 
 Imagine a route like ```/user/:id/view```(Registered as ```UserController.viewUser```), which takes the users id as a route parameter
-or one like ```/user/view?id=``` which takes a query parameter
+or one like ```/user/view?id=``` which takes a query parameter;
 
 ```typescript
-return response().route('UserController.viewUser', {id : 'some user id'});
+// This will redirect the client to "/user/42/view"
+return response().route('UserController.viewUser', {id : 42});
 ```
